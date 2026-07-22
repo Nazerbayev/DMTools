@@ -10,7 +10,8 @@
     "npm:react-dom@^19.2.7": "19.2.7_react@19.2.7",
     "npm:react@^19.2.7": "19.2.7",
     "npm:typescript@~6.0.2": "6.0.3",
-    "npm:vite@^8.1.1": "8.1.5_@types+node@24.13.3"
+    "npm:vite@^8.1.1": "8.1.5_@types+node@24.13.3",
+    "npm:wouter@^3.10.0": "3.10.0_react@19.2.7"
   },
   "npm": {
     "@emnapi/core@1.11.1": {
@@ -1423,6 +1424,9 @@
         "lightningcss-win32-x64-msvc"
       ]
     },
+    "mitt@3.0.1": {
+      "integrity": "sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw=="
+    },
     "nanoid@3.3.16": {
       "integrity": "sha512-bzlKTyNJ7+LdGIIwy8ijFpIqEQIvafahV7eYykJ8Cvh42EdJeODoJ6gUJXpQJvej1BddH8OqTXZNE/KfbWAu8Q==",
       "bin": true
@@ -1583,6 +1587,9 @@
     "react@19.2.7": {
       "integrity": "sha512-HNe9WslTbXmFK8o8cmwgAeJFSBvt1bPdHCVKtaaV+WlAN36mpT4hcRpwbf3fY56ar2oIXzsBpOAiIRHAdY0OlQ=="
     },
+    "regexparam@3.0.0": {
+      "integrity": "sha512-RSYAtP31mvYLkAHrOlh25pCNQ5hWnT106VukGaaFfuJrZFkGRX5GhUAdPqpSDXxOhA2c4akmRuplv1mRqnBn6Q=="
+    },
     "rolldown@1.1.5": {
       "integrity": "sha512-t9z29cJjXf/vxQ8dyhCSpt6H6aSwHTk8cT5I3iy6SMXuFpk5mB6PL6XfC8PCwrPTx93udwKUm9HRteAlTGBLiA==",
       "dependencies": [
@@ -1654,6 +1661,12 @@
         "@types/react"
       ]
     },
+    "use-sync-external-store@1.6.0_react@19.2.7": {
+      "integrity": "sha512-Pp6GSwGP/NrPIrxVFAIkOQeyw8lFenOHijQWkUTrDvrF4ALqylP2C/KCkeS9dpUM3KvYRQhna5vt7IL95+ZQ9w==",
+      "dependencies": [
+        "react"
+      ]
+    },
     "vite@8.1.5_@types+node@24.13.3": {
       "integrity": "sha512-7ULLwsCdYx/nRyrpiEwvqb5TFHrMVZyBt+rg/OAXT7rgj/z+DtTDyKFeLAdDkubDVDKD8jOsndmy7m55XcfUsw==",
       "dependencies": [
@@ -1671,6 +1684,15 @@
         "@types/node"
       ],
       "bin": true
+    },
+    "wouter@3.10.0_react@19.2.7": {
+      "integrity": "sha512-zTfddD80zc2/J5l8JKcdvzOK6AwP0kpyHEI3DxRN2bn8U1oJPnrSVm8v+X3WwDamvLAOxTO7ZvkxkpRWlyeJ1Q==",
+      "dependencies": [
+        "mitt",
+        "react",
+        "regexparam",
+        "use-sync-external-store"
+      ]
     }
   },
   "workspace": {
@@ -1685,7 +1707,8 @@
         "npm:react-dom@^19.2.7",
         "npm:react@^19.2.7",
         "npm:typescript@~6.0.2",
-        "npm:vite@^8.1.1"
+        "npm:vite@^8.1.1",
+        "npm:wouter@^3.10.0"
       ]
     }
   }

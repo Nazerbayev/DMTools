@@ -1,0 +1,24 @@
+{
+  "desktop": {
+    "app": {
+      "name": "DM Tools",
+      "icons": {
+        "windows": "./icons/app.ico"
+      },
+      "deepLinks": ["dmtools"]
+    },
+    "backend": "webview",
+    "output": {
+      "windows": "./output/DMTools"
+    }
+  },  
+  "tasks": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint",
+    "package": {
+      "command": "deno desktop .",
+      "dependencies": ["build"]
+    }
+  }
+}
