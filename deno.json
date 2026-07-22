@@ -11,7 +11,7 @@
     "output": {
       "windows": "./output/DMTools"
     }
-  },  
+  },
   "tasks": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -19,6 +19,12 @@
     "package": {
       "command": "deno desktop .",
       "dependencies": ["build"]
-    }
+    },
+    "migrate": "deno run --allow-read --allow-write --allow-ffi ./src/migrator.ts"
+  },
+  "imports": {
+    "@db/sqlite": "jsr:@db/sqlite@^0.13.0",
+    "@kysely/kysely": "jsr:@kysely/kysely@^0.29.4",
+    "@marshift/kysely-deno-sqlite3": "jsr:@marshift/kysely-deno-sqlite3@^1.0.0"
   }
 }
