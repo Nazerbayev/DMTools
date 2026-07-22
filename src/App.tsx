@@ -1,15 +1,13 @@
-import { Flex, Text, Button } from "@radix-ui/themes";
-
+import { Route, Switch } from "wouter";
+import Main from "./pages/Main.tsx";
 import './App.css'
 
 function App() {
   return (
-    <main>
-      <Flex direction="column" gap="2">
-			  <Text>Hello from Radix Themes :)</Text>
-			  <Button>Let's go</Button>
-		  </Flex>
-    </main>
+    <Switch>
+      <Route path="/" component={Main} />
+      <Route path="/about" component={() => <h1>About</h1>} />
+    </Switch>
   )
 }
 
