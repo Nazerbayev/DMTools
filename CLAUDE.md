@@ -11,13 +11,12 @@ This is a web helper intended for Dungeon Masters using Dungeon and Dragons 5.5 
   - No player data is needed beyond current AC, HP and passive perception, insight and investigation.
   - As much information of the monster as possible is recommended.
   - `Combat tracker` can fetch monster information from the `Monster Library` feature.
-  - `Enemy Encounters`
 - `Monster Library` is a compendium of monsters that the dungeon master has saved. New monsters can be fetched from [Open 5e api](https://open5e.com/api-docs)
 
 ## Constraints
 
 - **New React/frontend dependencies require permission first.** Prefer what's already in `package.json`, but if a new npm/Deno package is genuinely needed for the React frontend, ask the user for permission before installing it.
-- **No Tailwind CSS.** Do not introduce Tailwind or any other utility-CSS framework. Styling stays on Radix UI Themes (`@radix-ui/themes`, see "UI components" below) plus plain CSS (`src/App.css` / component-local stylesheets).
+- **No Tailwind CSS.** Do not introduce Tailwind or any other utility-CSS framework. Styling stays on Radix UI Themes (`@radix-ui/themes`) plus plain CSS (`src/App.css` / component-local stylesheets).
 
 ## Project state
 
