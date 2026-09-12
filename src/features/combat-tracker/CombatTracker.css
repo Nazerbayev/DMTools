@@ -1,0 +1,430 @@
+.tracker {
+  --tracker-bg: #0b0c14;
+  --tracker-panel: #0f1019;
+  --tracker-border: #22232f;
+  --tracker-text: #e7e8ec;
+  --tracker-text-muted: #7d8194;
+  --tracker-text-faint: #4d5063;
+  --tracker-accent: #34e0a1;
+  --tracker-accent-bg: rgba(52, 224, 161, 0.12);
+  --tracker-danger: #f87171;
+  --tracker-danger-bg: rgba(248, 113, 113, 0.14);
+  --tracker-info: #60a5fa;
+  --tracker-info-bg: rgba(96, 165, 250, 0.14);
+  --tracker-neutral-bg: rgba(148, 152, 173, 0.14);
+
+  display: flex;
+  flex-direction: column;
+  height: 100svh;
+  background: var(--tracker-bg);
+  color: var(--tracker-text);
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Top bar */
+
+.tracker-topbar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--tracker-border);
+  background: var(--tracker-panel);
+  flex-shrink: 0;
+}
+
+.tracker-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  background: linear-gradient(90deg, #8b9dfd, #b58cff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  white-space: nowrap;
+}
+
+.tracker-brand svg {
+  color: #8b9dfd;
+  flex-shrink: 0;
+}
+
+.tracker-combat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.2;
+}
+
+.tracker-combat-info .label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  color: var(--tracker-text-muted);
+}
+
+.tracker-combat-info .value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--tracker-text);
+}
+
+.tracker-round-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--tracker-accent-bg);
+  color: var(--tracker-accent);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tracker-search {
+  flex: 1 1 auto;
+  max-width: 320px;
+  margin-left: auto;
+}
+
+.tracker-icon-btn {
+  color: var(--tracker-text-muted) !important;
+}
+
+.tracker-avatar {
+  background: linear-gradient(135deg, #8b9dfd, #b58cff) !important;
+}
+
+/* Body layout */
+
+.tracker-body {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* Sidebar */
+
+.tracker-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px;
+  border-right: 1px solid var(--tracker-border);
+  background: var(--tracker-panel);
+}
+
+.tracker-campaign-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 4px 20px;
+}
+
+.tracker-campaign-portrait {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #2b2540, #1a1e33);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tracker-accent);
+  flex-shrink: 0;
+}
+
+.tracker-campaign-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--tracker-text);
+}
+
+.tracker-campaign-subtitle {
+  font-size: 12px;
+  color: var(--tracker-text-muted);
+}
+
+.tracker-add-combatant {
+  width: 100%;
+  justify-content: center !important;
+  margin-bottom: 20px;
+}
+
+.tracker-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tracker-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: var(--tracker-text-muted);
+  border-left: 3px solid transparent;
+  cursor: default;
+}
+
+.tracker-nav-item.active {
+  color: var(--tracker-accent);
+  background: var(--tracker-accent-bg);
+  border-left-color: var(--tracker-accent);
+}
+
+.tracker-sidebar-spacer {
+  flex: 1 1 auto;
+}
+
+.tracker-settings {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tracker-text-muted);
+}
+
+/* Main content */
+
+.tracker-main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.tracker-table-wrap {
+  flex: 1 1 auto;
+  overflow: auto;
+  padding: 20px 24px;
+}
+
+.tracker-table {
+  width: 100%;
+}
+
+.tracker-table th {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  color: var(--tracker-text-muted);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--tracker-border);
+  padding-bottom: 10px;
+  text-align: left;
+}
+
+.tracker-row {
+  background: var(--tracker-panel);
+}
+
+.tracker-row td {
+  border-bottom: 6px solid var(--tracker-bg);
+  padding: 14px 12px;
+  vertical-align: middle;
+}
+
+.tracker-row td:first-child {
+  border-left: 3px solid transparent;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.tracker-row td:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.tracker-row.active td:first-child {
+  border-left-color: var(--tracker-accent);
+}
+
+.tracker-row.active {
+  background: #14151f;
+}
+
+.tracker-init {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--tracker-text-faint);
+}
+
+.tracker-row.active .tracker-init {
+  color: var(--tracker-accent);
+}
+
+.tracker-combatant {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tracker-portrait {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tracker-portrait.monster {
+  background: rgba(52, 224, 161, 0.14);
+  color: var(--tracker-accent);
+}
+
+.tracker-portrait.player {
+  background: var(--tracker-info-bg);
+  color: var(--tracker-info);
+}
+
+.tracker-combatant-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--tracker-text);
+}
+
+.tracker-combatant-subtitle {
+  font-size: 11px;
+  letter-spacing: 0.4px;
+  color: var(--tracker-text-muted);
+}
+
+.tracker-ac {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 30px;
+  border: 1px solid var(--tracker-border);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--tracker-text);
+}
+
+.tracker-health {
+  min-width: 160px;
+}
+
+.tracker-health-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.tracker-health-row .critical {
+  color: var(--tracker-danger);
+}
+
+.tracker-hp-btn {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.tracker-hp-bar {
+  width: 100%;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+.tracker-hp-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.tracker-hp-bar-fill.success {
+  background: var(--tracker-accent);
+}
+
+.tracker-hp-bar-fill.info {
+  background: var(--tracker-info);
+}
+
+.tracker-hp-bar-fill.danger {
+  background: var(--tracker-danger);
+}
+
+.tracker-statuses {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tracker-status-none {
+  color: var(--tracker-text-faint);
+}
+
+.tracker-badge {
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.tracker-badge.danger {
+  background: var(--tracker-danger-bg);
+  color: var(--tracker-danger);
+}
+
+.tracker-badge.info {
+  background: var(--tracker-info-bg);
+  color: var(--tracker-info);
+}
+
+.tracker-badge.neutral {
+  background: var(--tracker-neutral-bg);
+  color: var(--tracker-text-muted);
+}
+
+/* Footer */
+
+.tracker-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 24px;
+  border-top: 1px solid var(--tracker-border);
+  background: var(--tracker-panel);
+  flex-shrink: 0;
+}
+
+.tracker-footer-secondary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tracker-footer button {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+}
+
+.tracker-next-turn {
+  background: var(--tracker-accent) !important;
+  color: #05130d !important;
+}
+
+.tracker-end-encounter {
+  color: var(--tracker-danger) !important;
+}
