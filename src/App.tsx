@@ -1,4 +1,4 @@
-import { CombatTracker } from './features/combat-tracker/CombatTracker'
+import { CombatTracker } from './pages/combat-tracker/CombatTracker'
 
 function App() {
   return <CombatTracker />

@@ -41,6 +41,12 @@ primitives) unless there's a clear reason to deviate.
 `src/designs/` (untracked) holds design reference images (e.g. `screen.png`) — check there for
 intended UI/layout before building screens.
 
+### File organization
+
+Each page/screen lives in its own folder under `src/pages/<page-name>/` (e.g.
+`src/pages/combat-tracker/`), holding that page's component, styles, and local types together.
+Use this convention for all pages (Combat Tracker, Enemy Encounters, Monster Library, etc.).
+
 ## Commands
 
 - `npm install` — install dependencies
