@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { pb } from '../lib/pocketbase'
 
 export type EnemySize = 'Tiny' | 'Small' | 'Medium' | 'Large' | 'Huge' | 'Gargantuan'
 
@@ -27,13 +28,19 @@ export interface Enemy {
 
 interface EnemyStore {
   enemies: Enemy[]
-  addEnemy: (enemy: Omit<Enemy, 'id'>) => void
+  fetchEnemies: () => Promise<void>
+  addEnemy: (enemy: Omit<Enemy, 'id'>) => Promise<Enemy>
 }
 
 export const useEnemyStore = create<EnemyStore>((set) => ({
   enemies: [],
-  addEnemy: (enemy) =>
-    set((state) => ({
-      enemies: [...state.enemies, { ...enemy, id: crypto.randomUUID() }],
-    })),
+  fetchEnemies: async () => {
+    const enemies = await pb.collection('enemies').getFullList({ sort: 'name' })
+    set({ enemies })
+  },
+  addEnemy: async (enemy) => {
+    const created = await pb.collection('enemies').create(enemy)
+    set((state) => ({ enemies: [...state.enemies, created] }))
+    return created
+  },
 }))

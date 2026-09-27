@@ -16,5 +16,11 @@ export interface Combatant {
   ac: number
   hp: number
   maxHp: number
-  statuses: StatusEffect[]
+  statuses: StatusEffect[] | null
+  /** Source `players` record id ('' when not linked). */
+  player: string
+  /** Source `enemies` record id ('' when not linked). */
+  enemy: string
 }
+
+export type NewCombatant = Omit<Combatant, 'id'>

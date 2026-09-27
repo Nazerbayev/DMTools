@@ -1,7 +1,10 @@
-import { useState } from 'react'
+import { useEffect } from 'react'
 import {
+  AlertDialog,
   Badge,
   Button,
+  Callout,
+  Flex,
   IconButton,
   Table,
   Text,
@@ -9,6 +12,7 @@ import {
 } from '@radix-ui/themes'
 import {
   BookOpen,
+  CircleAlert,
   FileText,
   History,
   Minus,
@@ -22,48 +26,13 @@ import {
   Swords,
   Timer,
   User,
+  X,
 } from 'lucide-react'
+import { Link } from 'wouter'
+import { useCombatStore } from '../../store/combatStore'
+import { AddCombatantDialog } from './AddCombatantDialog'
 import type { Combatant } from './types'
 import './CombatTracker.css'
-
-const INITIAL_COMBATANTS: Combatant[] = [
-  {
-    id: 'shadow-demon',
-    name: 'Shadow Demon (Elite)',
-    subtitle: 'FIEND, MEDIUM',
-    kind: 'monster',
-    initiative: 22,
-    ac: 17,
-    hp: 112,
-    maxHp: 120,
-    statuses: [
-      { label: 'Raged', tone: 'danger' },
-      { label: 'Hasted', tone: 'info' },
-    ],
-  },
-  {
-    id: 'elara-swiftwind',
-    name: 'Elara Swiftwind',
-    subtitle: 'PLAYER (RANGER)',
-    kind: 'player',
-    initiative: 18,
-    ac: 16,
-    hp: 45,
-    maxHp: 65,
-    statuses: [],
-  },
-  {
-    id: 'cultist-a',
-    name: 'Cultist Initiate A',
-    subtitle: 'HUMANOID, MEDIUM',
-    kind: 'monster',
-    initiative: 12,
-    ac: 12,
-    hp: 4,
-    maxHp: 18,
-    statuses: [{ label: 'Prone', tone: 'neutral' }],
-  },
-]
 
 const NAV_ITEMS = [
   { label: 'Encounter', icon: Swords, active: true },
@@ -72,43 +41,38 @@ const NAV_ITEMS = [
   { label: 'Notes', icon: FileText, active: false },
 ]
 
+function hpRatio(hp: number, maxHp: number) {
+  return maxHp > 0 ? hp / maxHp : 0
+}
+
 function hpBarTone(
   hp: number,
   maxHp: number,
   kind: Combatant['kind'],
 ): 'success' | 'info' | 'danger' {
-  if (hp / maxHp <= 0.25) return 'danger'
+  if (hpRatio(hp, maxHp) <= 0.25) return 'danger'
   return kind === 'player' ? 'info' : 'success'
 }
 
 export function CombatTracker() {
-  const [combatants, setCombatants] = useState(INITIAL_COMBATANTS)
-  const [activeId, setActiveId] = useState(combatants[0].id)
-  const [round, setRound] = useState(3)
+  const combatants = useCombatStore((state) => state.combatants)
+  const activeId = useCombatStore((state) => state.activeId)
+  const round = useCombatStore((state) => state.round)
+  const loading = useCombatStore((state) => state.loading)
+  const error = useCombatStore((state) => state.error)
+  const fetchCombatants = useCombatStore((state) => state.fetchCombatants)
+  const setHp = useCombatStore((state) => state.setHp)
+  const removeCombatant = useCombatStore((state) => state.removeCombatant)
+  const endEncounter = useCombatStore((state) => state.endEncounter)
+  const goToTurn = useCombatStore((state) => state.goToTurn)
 
-  const activeIndex = combatants.findIndex((c) => c.id === activeId)
+  useEffect(() => {
+    fetchCombatants()
+  }, [fetchCombatants])
 
-  function goToTurn(offset: number) {
-    const nextIndex = activeIndex + offset
-    if (nextIndex >= combatants.length) {
-      setRound((r) => r + 1)
-      setActiveId(combatants[0].id)
-    } else if (nextIndex < 0) {
-      setRound((r) => Math.max(1, r - 1))
-      setActiveId(combatants[combatants.length - 1].id)
-    } else {
-      setActiveId(combatants[nextIndex].id)
-    }
-  }
-
-  function adjustHp(id: string, delta: number) {
-    setCombatants((prev) =>
-      prev.map((c) =>
-        c.id === id
-          ? { ...c, hp: Math.min(c.maxHp, Math.max(0, c.hp + delta)) }
-          : c,
-      ),
-    )
+  function adjustHp(combatant: Combatant, delta: number) {
+    const hp = Math.min(combatant.maxHp, Math.max(0, combatant.hp + delta))
+    if (hp !== combatant.hp) setHp(combatant.id, hp)
   }
 
   return (
@@ -162,10 +126,14 @@ export function CombatTracker() {
             </div>
           </div>
 
-          <Button className="tracker-add-combatant" variant="soft" color="gray">
-            <Plus size={14} />
-            Add Combatant
-          </Button>
+          <AddCombatantDialog
+            trigger={
+              <Button className="tracker-add-combatant" variant="soft" color="gray">
+                <Plus size={14} />
+                Add Combatant
+              </Button>
+            }
+          />
 
           <nav className="tracker-nav">
             {NAV_ITEMS.map(({ label, icon: Icon, active }) => (
@@ -188,6 +156,15 @@ export function CombatTracker() {
         </aside>
 
         <main className="tracker-main">
+          {error && (
+            <Callout.Root className="tracker-error" color="red" role="alert">
+              <Callout.Icon>
+                <CircleAlert size={16} />
+              </Callout.Icon>
+              <Callout.Text>Database error: {error}</Callout.Text>
+            </Callout.Root>
+          )}
+
           <div className="tracker-table-wrap">
             <Table.Root className="tracker-table" variant="ghost">
               <Table.Header>
@@ -197,12 +174,28 @@ export function CombatTracker() {
                   <Table.ColumnHeaderCell>AC</Table.ColumnHeaderCell>
                   <Table.ColumnHeaderCell>Health</Table.ColumnHeaderCell>
                   <Table.ColumnHeaderCell>Status</Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell />
                 </Table.Row>
               </Table.Header>
               <Table.Body>
+                {combatants.length === 0 && (
+                  <Table.Row>
+                    <Table.Cell colSpan={6} className="tracker-empty">
+                      {loading ? (
+                        'Loading combat…'
+                      ) : (
+                        <>
+                          No combatants yet. Use <strong>Add Combatant</strong> to pull from your
+                          saved <Link href="/players/new">players</Link> and{' '}
+                          <Link href="/enemies/new">enemies</Link>.
+                        </>
+                      )}
+                    </Table.Cell>
+                  </Table.Row>
+                )}
                 {combatants.map((combatant) => {
                   const isActive = combatant.id === activeId
-                  const isCritical = combatant.hp / combatant.maxHp <= 0.25
+                  const isCritical = hpRatio(combatant.hp, combatant.maxHp) <= 0.25
                   const tone = hpBarTone(
                     combatant.hp,
                     combatant.maxHp,
@@ -253,7 +246,7 @@ export function CombatTracker() {
                               variant="soft"
                               color="gray"
                               aria-label={`Decrease HP for ${combatant.name}`}
-                              onClick={() => adjustHp(combatant.id, -1)}
+                              onClick={() => adjustHp(combatant, -1)}
                             >
                               <Minus size={10} />
                             </IconButton>
@@ -266,7 +259,7 @@ export function CombatTracker() {
                               variant="soft"
                               color="gray"
                               aria-label={`Increase HP for ${combatant.name}`}
-                              onClick={() => adjustHp(combatant.id, 1)}
+                              onClick={() => adjustHp(combatant, 1)}
                             >
                               <Plus size={10} />
                             </IconButton>
@@ -275,7 +268,7 @@ export function CombatTracker() {
                             <div
                               className={`tracker-hp-bar-fill ${tone}`}
                               style={{
-                                width: `${(combatant.hp / combatant.maxHp) * 100}%`,
+                                width: `${hpRatio(combatant.hp, combatant.maxHp) * 100}%`,
                               }}
                             />
                           </div>
@@ -283,7 +276,7 @@ export function CombatTracker() {
                       </Table.Cell>
 
                       <Table.Cell>
-                        {combatant.statuses.length === 0 ? (
+                        {!combatant.statuses?.length ? (
                           <span className="tracker-status-none">--</span>
                         ) : (
                           <div className="tracker-statuses">
@@ -297,6 +290,18 @@ export function CombatTracker() {
                             ))}
                           </div>
                         )}
+                      </Table.Cell>
+
+                      <Table.Cell>
+                        <IconButton
+                          className="tracker-remove-btn"
+                          size="1"
+                          variant="ghost"
+                          aria-label={`Remove ${combatant.name}`}
+                          onClick={() => removeCombatant(combatant.id)}
+                        >
+                          <X size={14} />
+                        </IconButton>
                       </Table.Cell>
                     </Table.Row>
                   )
@@ -319,10 +324,38 @@ export function CombatTracker() {
                 <SkipForward size={14} />
                 Next Turn
               </Button>
-              <Button className="tracker-end-encounter" variant="soft" color="gray">
-                <Square size={14} />
-                End Encounter
-              </Button>
+              <AlertDialog.Root>
+                <AlertDialog.Trigger>
+                  <Button
+                    className="tracker-end-encounter"
+                    variant="soft"
+                    color="gray"
+                    disabled={combatants.length === 0}
+                  >
+                    <Square size={14} />
+                    End Encounter
+                  </Button>
+                </AlertDialog.Trigger>
+                <AlertDialog.Content maxWidth="420px">
+                  <AlertDialog.Title>End encounter?</AlertDialog.Title>
+                  <AlertDialog.Description size="2">
+                    All {combatants.length} combatants will be removed from the tracker. Saved
+                    players and enemies are not affected.
+                  </AlertDialog.Description>
+                  <Flex gap="3" mt="4" justify="end">
+                    <AlertDialog.Cancel>
+                      <Button variant="soft" color="gray">
+                        Cancel
+                      </Button>
+                    </AlertDialog.Cancel>
+                    <AlertDialog.Action>
+                      <Button color="red" onClick={() => endEncounter()}>
+                        End Encounter
+                      </Button>
+                    </AlertDialog.Action>
+                  </Flex>
+                </AlertDialog.Content>
+              </AlertDialog.Root>
             </div>
           </footer>
         </main>

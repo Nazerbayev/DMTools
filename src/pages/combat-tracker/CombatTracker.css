@@ -428,3 +428,73 @@
 .tracker-end-encounter {
   color: var(--tracker-danger) !important;
 }
+
+.tracker-remove-btn {
+  color: var(--tracker-text-faint) !important;
+}
+
+.tracker-remove-btn:hover {
+  color: var(--tracker-danger) !important;
+}
+
+.tracker-empty {
+  padding: 48px 12px;
+  text-align: center;
+  color: var(--tracker-text-muted);
+  font-size: 14px;
+}
+
+.tracker-empty a {
+  color: var(--tracker-accent);
+}
+
+.tracker-error {
+  margin: 20px 24px 0;
+}
+
+/* Add Combatant dialog (portalled outside .tracker, so uses Radix tokens) */
+
+.add-combatant-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 50vh;
+  overflow-y: auto;
+  padding-top: 12px;
+}
+
+.add-combatant-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--radius-3);
+  background: var(--gray-a2);
+}
+
+.add-combatant-info {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.add-combatant-init {
+  width: 80px;
+}
+
+.add-combatant-qty {
+  width: 64px;
+}
+
+.add-combatant-empty {
+  padding: 16px 4px;
+}
+
+.add-combatant-empty a {
+  color: var(--accent-11);
+}
+
+.add-combatant-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}

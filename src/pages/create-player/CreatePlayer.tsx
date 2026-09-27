@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react'
-import { Button, Heading, Text, TextField } from '@radix-ui/themes'
-import { ArrowLeft, Save, User } from 'lucide-react'
+import { Button, Callout, Heading, Text, TextField } from '@radix-ui/themes'
+import { ArrowLeft, CircleAlert, Save, User } from 'lucide-react'
 import { Link, useLocation } from 'wouter'
 import { usePlayerStore } from '../../store/playerStore'
 import './CreatePlayer.css'
@@ -17,21 +17,30 @@ export function CreatePlayer() {
   const [passiveInsight, setPassiveInsight] = useState('10')
   const [passiveInvestigation, setPassiveInvestigation] = useState('10')
 
-  function handleSubmit(event: FormEvent) {
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  async function handleSubmit(event: FormEvent) {
     event.preventDefault()
     if (!name.trim()) return
 
-    addPlayer({
-      name: name.trim(),
-      characterClass: characterClass.trim(),
-      armorClass: Number(armorClass) || 0,
-      maxHp: Number(maxHp) || 0,
-      passivePerception: Number(passivePerception) || 0,
-      passiveInsight: Number(passiveInsight) || 0,
-      passiveInvestigation: Number(passiveInvestigation) || 0,
-    })
-
-    navigate('/')
+    setSaving(true)
+    setError(null)
+    try {
+      await addPlayer({
+        name: name.trim(),
+        characterClass: characterClass.trim(),
+        armorClass: Number(armorClass) || 0,
+        maxHp: Number(maxHp) || 0,
+        passivePerception: Number(passivePerception) || 0,
+        passiveInsight: Number(passiveInsight) || 0,
+        passiveInvestigation: Number(passiveInvestigation) || 0,
+      })
+      navigate('/')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err))
+      setSaving(false)
+    }
   }
 
   return (
@@ -147,11 +156,20 @@ export function CreatePlayer() {
           </div>
         </section>
 
+        {error && (
+          <Callout.Root color="red" role="alert">
+            <Callout.Icon>
+              <CircleAlert size={16} />
+            </Callout.Icon>
+            <Callout.Text>Could not save player: {error}</Callout.Text>
+          </Callout.Root>
+        )}
+
         <footer className="create-player-footer">
           <Button type="button" variant="soft" color="gray" onClick={() => navigate('/')}>
             Cancel
           </Button>
-          <Button type="submit" className="create-player-save">
+          <Button type="submit" className="create-player-save" loading={saving}>
             <Save size={14} />
             Save Character
           </Button>

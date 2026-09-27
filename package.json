@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "pb": "./pocketbase serve"
   },
   "dependencies": {
     "@radix-ui/themes": "^3.3.0",

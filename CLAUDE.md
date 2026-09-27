@@ -26,13 +26,13 @@ routing, or state wiring yet. Treat this as a greenfield project: there is no es
 architecture to preserve, so use idiomatic patterns for the libraries already installed rather
 than inventing new conventions.
 
-Dependencies are installed but **not yet used anywhere in `src/`**:
+Installed app dependencies:
 
 - `wouter` — routing
 - `zustand` — state management
 - `@radix-ui/themes` — UI component library
 - `lucide-react` — icon set
-- `pocketbase` — backend/DB client SDK
+- `pocketbase` — backend/DB client SDK (see Backend below)
 
 When adding features, prefer these already-installed libraries over introducing new ones for the
 same purpose (e.g. use `wouter` for routing, `zustand` for shared state, `@radix-ui/themes` for UI
@@ -41,11 +41,31 @@ primitives) unless there's a clear reason to deviate.
 `src/designs/` (untracked) holds design reference images (e.g. `screen.png`) — check there for
 intended UI/layout before building screens.
 
+### Backend (PocketBase)
+
+- The PocketBase Linux binary lives at `./pocketbase` (gitignored, as is `pb_data/`). Run it with
+  `npm run pb` (`./pocketbase serve`, default `http://127.0.0.1:8090`; override the frontend URL
+  with `VITE_POCKETBASE_URL`).
+- Schema lives in `pb_migrations/` as JS migrations, applied automatically on `serve`. Add a new
+  migration file for schema changes rather than editing an applied one.
+- This is a single-user personal tool: collection API rules are all `""` (public), no auth.
+- The shared client is `src/lib/pocketbase.ts` (typed per collection). Zustand stores in
+  `src/store/` wrap it: `fetchX()` loads records, `addX()` creates one and appends it to the store.
+- Collection field names are camelCase and match the TS interfaces directly.
+- Collections: `players`, `enemies` (the saved library) and `combatants` (the currently running
+  combat; stats are snapshotted from the library on add, with `player`/`enemy` relations back to
+  the source record). Round and active turn live only in `src/store/combatStore.ts` memory.
+
 ### File organization
 
 Each page/screen lives in its own folder under `src/pages/<page-name>/` (e.g.
 `src/pages/combat-tracker/`), holding that page's component, styles, and local types together.
 Use this convention for all pages (Combat Tracker, Enemy Encounters, Monster Library, etc.).
+
+## TODO
+
+Known gaps and planned follow-ups are tracked in [TODO.md](TODO.md). Check it before starting
+related work, and update it when you finish an item or leave a new gap behind.
 
 ## Commands
 

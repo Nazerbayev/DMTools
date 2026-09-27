@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react'
-import { Button, Heading, Select, Text, TextArea, TextField } from '@radix-ui/themes'
-import { ArrowLeft, Save, Swords } from 'lucide-react'
+import { Button, Callout, Heading, Select, Text, TextArea, TextField } from '@radix-ui/themes'
+import { ArrowLeft, CircleAlert, Save, Swords } from 'lucide-react'
 import { Link, useLocation } from 'wouter'
 import { useEnemyStore, type AbilityScores, type EnemySize } from '../../store/enemyStore'
 import './CreateEnemy.css'
@@ -38,24 +38,33 @@ export function CreateEnemy() {
     setAbilityScores((prev) => ({ ...prev, [key]: Number.isNaN(parsed) ? 0 : parsed }))
   }
 
-  function handleSubmit(event: FormEvent) {
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  async function handleSubmit(event: FormEvent) {
     event.preventDefault()
     if (!name.trim()) return
 
-    addEnemy({
-      name: name.trim(),
-      size,
-      type: type.trim(),
-      alignment: alignment.trim(),
-      armorClass: Number(armorClass) || 0,
-      hitPoints: Number(hitPoints) || 0,
-      speed: speed.trim(),
-      challengeRating: challengeRating.trim(),
-      abilityScores,
-      traits: traits.trim(),
-    })
-
-    navigate('/')
+    setSaving(true)
+    setError(null)
+    try {
+      await addEnemy({
+        name: name.trim(),
+        size,
+        type: type.trim(),
+        alignment: alignment.trim(),
+        armorClass: Number(armorClass) || 0,
+        hitPoints: Number(hitPoints) || 0,
+        speed: speed.trim(),
+        challengeRating: challengeRating.trim(),
+        abilityScores,
+        traits: traits.trim(),
+      })
+      navigate('/')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err))
+      setSaving(false)
+    }
   }
 
   return (
@@ -204,11 +213,20 @@ export function CreateEnemy() {
           />
         </section>
 
+        {error && (
+          <Callout.Root color="red" role="alert">
+            <Callout.Icon>
+              <CircleAlert size={16} />
+            </Callout.Icon>
+            <Callout.Text>Could not save enemy: {error}</Callout.Text>
+          </Callout.Root>
+        )}
+
         <footer className="create-enemy-footer">
           <Button type="button" variant="soft" color="gray" onClick={() => navigate('/')}>
             Cancel
           </Button>
-          <Button type="submit" className="create-enemy-save">
+          <Button type="submit" className="create-enemy-save" loading={saving}>
             <Save size={14} />
             Save Enemy
           </Button>
